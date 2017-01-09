@@ -1060,7 +1060,7 @@ class DB_MySQL implements DB_Base
 		$query = $this->query("SELECT VERSION() as version");
 		$ver = $this->fetch_array($query);
 		$version = $ver['version'];
-		
+
 		if($version)
 		{
 			$version = explode(".", $version, 3);

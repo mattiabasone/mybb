@@ -343,17 +343,17 @@ function my_date($format, $stamp=0, $offset="", $ty=1, $adodb=false)
 	{
 		if(isset($mybb->user['uid']) && $mybb->user['uid'] != 0 && array_key_exists("timezone", $mybb->user))
 		{
-			$offset = $mybb->user['timezone'];
+			$offset = (float)$mybb->user['timezone'];
 			$dstcorrection = $mybb->user['dst'];
 		}
 		elseif(defined("IN_ADMINCP"))
 		{
-			$offset =  $mybbadmin['timezone'];
+			$offset = (float)$mybbadmin['timezone'];
 			$dstcorrection = $mybbadmin['dst'];
 		}
 		else
 		{
-			$offset = $mybb->settings['timezoneoffset'];
+			$offset = (float)$mybb->settings['timezoneoffset'];
 			$dstcorrection = $mybb->settings['dstcorrection'];
 		}
 
@@ -8490,3 +8490,22 @@ function my_validate_url($url, $relative_path=false)
 	return false;
 }
 
+/**
+ * Strip html tags from string, also removes <script> and <style> contents.
+ * 
+ * @param  string $string         String to stripe
+ * @param  string $allowable_tags Allowed html tags
+ * 
+ * @return string                 Striped string
+ */
+function my_strip_tags($string, $allowable_tags = '')
+{
+	$pattern = array(
+		'@(&lt;)style[^(&gt;)]*?(&gt;).*?(&lt;)/style(&gt;)@siu',
+		'@(&lt;)script[^(&gt;)]*?.*?(&lt;)/script(&gt;)@siu',
+		'@<style[^>]*?>.*?</style>@siu',
+		'@<script[^>]*?.*?</script>@siu',
+	);
+	$string = preg_replace($pattern, '', $string);
+	return strip_tags($string, $allowable_tags);
+}
